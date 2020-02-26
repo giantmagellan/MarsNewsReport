@@ -67,18 +67,22 @@ def scrape():
     # Dependency
     import pandas as pd
 
+    browser.visit(facts_url)
+    html = browser.html
+    facts_soup = bs(html, 'html.parser')
+
     mars_facts = []
 
-    def get_mars_facts():
-        """Finds all 'tr' tags and assigns them to a variable."""
-        facts = facts_soup.find_all('tr')[:8]
-        for tr in facts:
-            """Finds all 'td' tags within each 'tr' tag and assigns it to a variable. Then appends to a list."""
-            tds = tr.find_all('td')[:8]
-            mars_facts.append({
-                tds[0].text, tds[1].text,
-            })
-        # print(mars_facts)
+    # def get_mars_facts():
+    """Finds all 'tr' tags and assigns them to a variable."""
+    facts = facts_soup.find_all('tr')[:8]
+    for tr in facts:
+        """Finds all 'td' tags within each 'tr' tag and assigns it to a variable. Then appends to a list."""
+        tds = tr.find_all('td')[:8]
+        mars_facts.append({
+            tds[0].text, tds[1].text,
+        })
+    # print(mars_facts)
 
     # get_mars_facts()
 
@@ -98,22 +102,22 @@ def scrape():
     hemisphere_urls = []
     hemi_url_prefix = 'https://astrogeology.usgs.gov'
 
-    def get_hemi_urls(hemi_soup):
-        """Querying through html code to find image url suffixes"""
-        containers = hemi_soup.find('div', {'class': 'container'})
-        items = containers.find_all('div', {'class': 'item'})
-    
-        for item in items:
-            """Joining image url strings and hemisphere titles to a list."""
-            hemi_url = hemi_url_prefix + item.find('a')['href']
-            # hemi_url = hemi_url_prefix + item.find('img')['src']
-            # h3 = item.find('h3')
-            # hemisphere_urls.append({'Title': h3.text, 'img_url': hemi_url})
-            hemisphere_urls.append(hemi_url)
-        
-        print(hemisphere_urls)
+    # def get_hemi_urls(hemi_soup):
+    """Querying through html code to find image url suffixes"""
+    containers = hemi_soup.find('div', {'class': 'container'})
+    items = containers.find_all('div', {'class': 'item'})
 
-    hemi_urls = get_hemi_urls(hemi_soup)
+    for item in items:
+        """Joining image url strings and hemisphere titles to a list."""
+        hemi_url_join = hemi_url_prefix + item.find('a')['href']
+        # hemi_url = hemi_url_prefix + item.find('img')['src']
+        # h3 = item.find('h3')
+        # hemisphere_urls.append({'Title': h3.text, 'img_url': hemi_url})
+        hemisphere_urls.append(hemi_url_join)
+    
+    print(hemisphere_urls)
+
+    # hemi_urls = get_hemi_urls(hemi_soup)
     # hemi_urls
 
     # For verification
@@ -147,3 +151,17 @@ def scrape():
         hemisphere_image_urls.append({'title': h2.text,
                                     'img_url': a})
     # hemisphere_image_urls
+
+    scrape_dict = {
+        'News Title': news_title,
+        'News Paragraph': news_p,
+        'Featured Image url': featured_image_url,
+        'Mars Weather': mars_weather,
+        'Mars Facts': mars_facts,
+        'Facts html': facts_html,
+        'Hemisphere Image urls': hemisphere_image_urls,
+    } 
+
+    return scrape_dict
+
+scrape
