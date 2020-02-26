@@ -25,7 +25,7 @@ def scrape():
     executable_path = {'executable_path': 'chromedriver.exe'}
     browser = Browser('chrome', **executable_path, headless=False)
 
-    """Latest news and paragraph text from the NASA Mars News site.""" 
+    """NASA MARS NEWS: Latest news and paragraph text from the NASA Mars News site.""" 
     browser.visit(news_url)
     html = browser.html
     news_soup = bs(html, 'html.parser')
@@ -41,7 +41,7 @@ def scrape():
 
     # print(news_p)
 
-    """Featured image from JPL's Mars programme."""
+    """JPL MARS SPACE IMAGES: Featured image from JPL's Mars programme."""
     browser.visit(jpl_url)
     html = browser.html
     jpl_soup = bs(html, 'html.parser')
@@ -53,3 +53,97 @@ def scrape():
     featured_image_url = url_prefix + images_b
     # featured_image_url
 
+    """MARS WEATHER TWITTER: Mars weather report tweet from Mars Weather twitter account."""
+    browser.visit(weather_url)
+    html = browser.html
+    weather_soup = bs(html, 'html.parser')
+
+    mars_weather_tweet = weather_soup.find('div', 
+                                       attrs={"class": "tweet", "data-name": "Mars Weather"})
+    mars_weather = mars_weather_tweet.find('p', 'tweet-text').get_text()
+    # print(mars_weather)
+
+    """MARS FACTS: General Facts about the "Red Planet." """
+    # Dependency
+    import pandas as pd
+
+    mars_facts = []
+
+    def get_mars_facts():
+        """Finds all 'tr' tags and assigns them to a variable."""
+        facts = facts_soup.find_all('tr')[:8]
+        for tr in facts:
+            """Finds all 'td' tags within each 'tr' tag and assigns it to a variable. Then appends to a list."""
+            tds = tr.find_all('td')[:8]
+            mars_facts.append({
+                tds[0].text, tds[1].text,
+            })
+        # print(mars_facts)
+
+    # get_mars_facts()
+
+    facts_df = pd.DataFrame(mars_facts)
+    # facts_df
+
+    # Render pandas dataframe to html table
+    facts_html = facts_df.to_html()
+    # print(facts_html)
+
+    """MARS HEMISPHERES: High resolution photos for each of Mars' hemisphers."""
+    browser.visit(hemi_url)
+    html = browser.html
+    hemi_soup = bs(html, 'html.parser')
+
+    # Empty list to store hemisphere urls
+    hemisphere_urls = []
+    hemi_url_prefix = 'https://astrogeology.usgs.gov'
+
+    def get_hemi_urls(hemi_soup):
+        """Querying through html code to find image url suffixes"""
+        containers = hemi_soup.find('div', {'class': 'container'})
+        items = containers.find_all('div', {'class': 'item'})
+    
+        for item in items:
+            """Joining image url strings and hemisphere titles to a list."""
+            hemi_url = hemi_url_prefix + item.find('a')['href']
+            # hemi_url = hemi_url_prefix + item.find('img')['src']
+            # h3 = item.find('h3')
+            # hemisphere_urls.append({'Title': h3.text, 'img_url': hemi_url})
+            hemisphere_urls.append(hemi_url)
+        
+        print(hemisphere_urls)
+
+    hemi_urls = get_hemi_urls(hemi_soup)
+    # hemi_urls
+
+    # For verification
+    # hemisphere_urls
+
+    # Empty list to store image urls
+    hemisphere_image_urls = []
+    links = hemisphere_urls
+
+    executable_path = {'executable_path': 'chromedriver.exe'}
+    browser = Browser('chrome', **executable_path, headless=False)
+
+    for link in links:
+        browser.visit(link)
+        html = browser.html
+        soup = bs(html, 'html.parser')
+        
+        """Querying each link to find each full resolution image url and its respective title."""
+        containers = soup.find('div', {'class': 'container'})
+        
+        """Searching for urls."""
+        downloads = containers.find('div', {'class': 'downloads'})
+        uls = downloads.find('ul')
+        lis = uls.find_all('li')[0]
+        a = lis.find('a')['href']
+        
+        """Searching for titles."""
+        contents = containers.find('div', {'class': 'content'})
+        h2 = contents.find('h2', {'class': 'title'})
+        
+        hemisphere_image_urls.append({'title': h2.text,
+                                    'img_url': a})
+    # hemisphere_image_urls
