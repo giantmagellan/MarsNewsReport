@@ -152,7 +152,8 @@ def scrape():
                                     'img_url': a})
     # hemisphere_image_urls
 
-    scrape_dict = {
+    # Store data in a dictionary
+    scrape_data = {
         'News Title': news_title,
         # 'News Paragraph': news_p,
         'Featured Image url': featured_image_url,
@@ -162,6 +163,11 @@ def scrape():
         'Hemisphere Image urls': hemisphere_image_urls,
     } 
 
-    print(scrape_dict)
+    # Close the browser after scraping
+    browser.quit()
+
+    # Return results
+    return scrape_data
 
 scrape()
+
