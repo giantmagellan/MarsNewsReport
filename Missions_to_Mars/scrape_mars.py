@@ -36,8 +36,8 @@ def scrape():
     news_title = news_results.find('a').text
 
     """News article teaser paragraph."""
-    list_text = news_soup.find('div', {'class': 'list_text'})
-    news_p = list_text.find('div', {'class': 'article_teaser_body'}).text
+    # list_text = news_soup.find('div', {'class': 'list_text'})
+    # news_p = list_text.find('div', {'class': 'article_teaser_body'}).text
 
     # print(news_p)
 
@@ -60,7 +60,7 @@ def scrape():
 
     mars_weather_tweet = weather_soup.find('div', 
                                        attrs={"class": "tweet", "data-name": "Mars Weather"})
-    mars_weather = mars_weather_tweet.find('p', 'tweet-text').get_text()
+    # mars_weather = mars_weather_tweet.find('p', 'tweet-text').get_text()
     # print(mars_weather)
 
     """MARS FACTS: General Facts about the "Red Planet." """
@@ -115,7 +115,7 @@ def scrape():
         # hemisphere_urls.append({'Title': h3.text, 'img_url': hemi_url})
         hemisphere_urls.append(hemi_url_join)
     
-    print(hemisphere_urls)
+    # print(hemisphere_urls)
 
     # hemi_urls = get_hemi_urls(hemi_soup)
     # hemi_urls
@@ -154,14 +154,14 @@ def scrape():
 
     scrape_dict = {
         'News Title': news_title,
-        'News Paragraph': news_p,
+        # 'News Paragraph': news_p,
         'Featured Image url': featured_image_url,
-        'Mars Weather': mars_weather,
+        # 'Mars Weather': mars_weather,
         'Mars Facts': mars_facts,
         'Facts html': facts_html,
         'Hemisphere Image urls': hemisphere_image_urls,
     } 
 
-    return scrape_dict
+    print(scrape_dict)
 
-scrape
+scrape()
