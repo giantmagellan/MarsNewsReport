@@ -45,7 +45,7 @@ def scrape():
     browser.visit(jpl_url)
     html = browser.html
     jpl_soup = bs(html, 'html.parser')
-    url_prefix = 'https://www.jps.nasa.gov'
+    url_prefix = 'https://www.jpl.nasa.gov'
 
     images_a = jpl_soup.find('figure', class_='lede')
     images_b = images_a.find('a')['href']
@@ -56,10 +56,9 @@ def scrape():
     """MARS WEATHER TWITTER: Mars weather report tweet from Mars Weather twitter account."""
     browser.visit(weather_url)
     html = browser.html
-    weather_soup = bs(html, 'html.parser')
+    # weather_soup = bs(html, 'html.parser')
 
-    mars_weather_tweet = weather_soup.find('div', 
-                                       attrs={"class": "tweet", "data-name": "Mars Weather"})
+    # mars_weather_tweet = weather_soup.find('div', attrs={"class": "tweet", "data-name": "Mars Weather"})
     # mars_weather = mars_weather_tweet.find('p', 'tweet-text').get_text()
     # print(mars_weather)
 
@@ -170,4 +169,6 @@ def scrape():
     return scrape_data
 
 scrape()
+
+
 
